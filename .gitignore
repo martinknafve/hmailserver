@@ -11,3 +11,6 @@
 *.lai
 *.la
 *.a
+hmailserver/source/Server/hMailServer/Debug/
+hmailserver/source/Server/hMailServer/hMailServer.h
+hmailserver/source/Server/hMailServer/Debug (x64)/*
