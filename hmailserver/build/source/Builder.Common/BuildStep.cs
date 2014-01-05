@@ -1,29 +1,18 @@
 // Copyright (c) 2010 Martin Knafve / hMailServer.com.  
 // http://www.hmailserver.com
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Collections;
-
 namespace Builder.Common
 {
-    abstract public class BuildStep
-    {
-        protected Builder m_oBuilder;
+   public abstract class BuildStep
+   {
+      protected Builder _builder;
 
-        public abstract void Run();
-        
-        public abstract string Name
-        {
-            get;
-        }
+      public abstract string Name { get; }
+      public abstract void Run();
 
-        protected string ExpandMacros(string sInput)
-        {
-           return m_oBuilder.ExpandMacros(sInput);
-        }
-
-
-    }
+      protected string ExpandMacros(string sInput)
+      {
+         return _builder.ExpandMacros(sInput);
+      }
+   }
 }

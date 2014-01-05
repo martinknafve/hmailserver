@@ -1,83 +1,61 @@
 // Copyright (c) 2010 Martin Knafve / hMailServer.com.  
 // http://www.hmailserver.com
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Collections;
 
 namespace Builder.Common
 {
    public class Builder
    {
-      System.Collections.ArrayList m_oBuildSteps;
-      System.Collections.ArrayList m_oMacros;
-
-      private string m_sParamSourcePath;
-      private string m_sParamVS8Path;
-      private string m_sParamInnoSetupPath;
-      private string m_sParamGitPath;
-
-      private int m_iStepStart;
-      private int m_iStepEnd;
-
       public delegate void MessageLogDelegate(bool timestamp, string message);
-      public event MessageLogDelegate MessageLog;
+
+      private readonly ArrayList _buildSteps;
+      private readonly ArrayList _macros;
+
+      private int _stepStart;
 
       public Builder()
       {
-         m_oBuildSteps = new System.Collections.ArrayList();
-         m_oMacros = new System.Collections.ArrayList();
+         _buildSteps = new ArrayList();
+         _macros = new ArrayList();
 
-         m_iStepStart = -1;
-         m_iStepEnd = -1;
+         _stepStart = -1;
+         StepEnd = -1;
       }
 
       public bool RunAllSteps
       {
-         get
-         {
-            return m_iStepStart == -1;
-         }
+         get { return _stepStart == -1; }
       }
 
       public int StepStart
       {
-         get { return m_iStepStart; }
-         set { m_iStepStart = value; }
+         get { return _stepStart; }
+         set { _stepStart = value; }
       }
 
-      public int StepEnd
+      public int StepEnd { get; set; }
+
+
+      public string ParameterSourcePath { get; set; }
+
+      public string ParameterVS8Path { get; set; }
+
+      public string ParameterInnoSetupPath { get; set; }
+
+      public string ParameterGitPath { get; set; }
+
+      public ArrayList Macros
       {
-         get { return m_iStepEnd; }
-         set { m_iStepEnd = value; }
+         get { return _macros; }
       }
 
-
-      public string ParameterSourcePath
+      public int Count
       {
-         get { return m_sParamSourcePath; }
-         set { m_sParamSourcePath = value; }
+         get { return _buildSteps.Count; }
       }
 
-      public string ParameterVS8Path
-      {
-         get { return m_sParamVS8Path; }
-         set { m_sParamVS8Path = value; }
-      }
-
-      public string ParameterInnoSetupPath
-      {
-         get { return m_sParamInnoSetupPath; }
-         set { m_sParamInnoSetupPath = value; }
-      }
-
-      public string ParameterGitPath
-      {
-         get { return m_sParamGitPath; }
-         set { m_sParamGitPath = value; }
-      }
-
+      public event MessageLogDelegate MessageLog;
 
 
       public void LoadSettings(Settings settings)
@@ -92,23 +70,17 @@ namespace Builder.Common
       {
          if (MessageLog != null)
             MessageLog(timestamp, sMessage);
-         
       }
 
       public void Add(BuildStep bs)
       {
-         m_oBuildSteps.Add(bs);
+         _buildSteps.Add(bs);
       }
 
       private void AddMacro(string sName, string sValue)
       {
-         Macro oMacro = new Macro(sName, sValue);
-         m_oMacros.Add(oMacro);
-      }
-
-      public System.Collections.ArrayList Macros
-      {
-         get { return m_oMacros; }
+         var oMacro = new Macro(sName, sValue);
+         _macros.Add(oMacro);
       }
 
       public void LoadMacros(string sourceDir, string version, string build)
@@ -126,19 +98,18 @@ namespace Builder.Common
          string sExpanded = input;
          bool bFound = true;
 
-         ArrayList oMacros = Macros;
+         ArrayList macros = Macros;
 
          while (bFound)
          {
             bFound = false;
 
-            for (int i = 0; i < oMacros.Count; i++)
+            foreach (Macro macro in macros)
             {
-               Macro oMacro = (Macro)oMacros[i];
-               if (sExpanded.IndexOf(oMacro.Name) >= 0)
+               if (sExpanded.IndexOf(macro.Name, System.StringComparison.Ordinal) >= 0)
                {
                   bFound = true;
-                  sExpanded = sExpanded.Replace(oMacro.Name, oMacro.Value);
+                  sExpanded = sExpanded.Replace(macro.Name, macro.Value);
                }
             }
          }
@@ -148,19 +119,7 @@ namespace Builder.Common
 
       public BuildStep Get(int index)
       {
-         return (BuildStep)m_oBuildSteps[index];
+         return (BuildStep) _buildSteps[index];
       }
-
-      public int Count
-      {
-         get
-         {
-            return m_oBuildSteps.Count;
-         }
-      }
-
-
    }
-
-
 }

@@ -2,55 +2,49 @@
 // http://www.hmailserver.com
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
 namespace Builder.Common
 {
-    class BuildStepRunApplication : BuildStep
-    {
-        private string m_sExecutable;
-        private string m_sArguments;
+   internal class BuildStepRunApplication : BuildStep
+   {
+      private readonly string _arguments;
+      private readonly string _executable;
+
+      public BuildStepRunApplication(Builder builder, string executable, string arguments)
+      {
+         _builder = builder;
+
+         _executable = executable;
+         _arguments = arguments;
+      }
 
 
-        public BuildStepRunApplication(Builder oBuilder, string sExecutable, string sArguments)
-        {
-            m_oBuilder = oBuilder;
+      public override string Name
+      {
+         get { return "Run application " + _executable; }
+      }
 
-            m_sExecutable = sExecutable;
-            m_sArguments = sArguments;
+      public override void Run()
+      {
+         _builder.Log("Running application " + _executable + "...\r\n", true);
 
-        }
+         var launcher = new ProcessLauncher();
+         launcher.Output += launcher_Output;
 
+         string workingDirectory = Path.GetDirectoryName(ExpandMacros(_executable));
 
-        public override string Name
-        {
-            get
-            {
-                return "Run application " + m_sExecutable;
-            }
-        }
+         string output;
+         int exitCode = launcher.LaunchProcess(ExpandMacros(_executable), ExpandMacros(_arguments), workingDirectory,
+            out output);
 
-        public override void Run()
-        {
-           m_oBuilder.Log("Running application " + m_sExecutable + "...\r\n", true);
+         if (exitCode != 0)
+            throw new Exception(string.Format("Running of application failed. Exit code: {0}", exitCode));
+      }
 
-            ProcessLauncher launcher = new ProcessLauncher();
-            launcher.Output += launcher_Output;
-
-            string workingDirectory = Path.GetDirectoryName(ExpandMacros(m_sExecutable));
-
-            string output;
-            int exitCode = launcher.LaunchProcess(ExpandMacros(m_sExecutable), ExpandMacros(m_sArguments),workingDirectory, out output);
-
-            if (exitCode != 0)
-               throw new Exception(string.Format("Running of application failed. Exit code: {0}", exitCode));
-        }
-
-        void launcher_Output(string output)
-        {
-           m_oBuilder.Log(output, false);
-        }
-    }
+      private void launcher_Output(string output)
+      {
+         _builder.Log(output, false);
+      }
+   }
 }

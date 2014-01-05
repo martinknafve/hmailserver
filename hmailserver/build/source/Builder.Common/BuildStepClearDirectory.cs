@@ -2,62 +2,57 @@
 // http://www.hmailserver.com
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
 namespace Builder.Common
 {
-    class BuildStepClearDirectory : BuildStep
-    {
-        private string _directory;
+   internal class BuildStepClearDirectory : BuildStep
+   {
+      private readonly string _directory;
 
-        public BuildStepClearDirectory(Builder builder, string directory)
-        {
-            if (string.IsNullOrEmpty(directory))
-                throw new ArgumentNullException("Directory must be specified.", "directory");
+      public BuildStepClearDirectory(Builder builder, string directory)
+      {
+         if (string.IsNullOrEmpty(directory))
+            throw new ArgumentNullException("Directory must be specified.", "directory");
 
-            if (builder == null)
-                throw new ArgumentNullException("Builder must be specified.", "builder");
+         if (builder == null)
+            throw new ArgumentNullException("Builder must be specified.", "builder");
 
-            m_oBuilder = builder;
-            _directory = directory;
-        }
+         _builder = builder;
+         _directory = directory;
+      }
 
-        public override void Run()
-        {
-            string directoryName = ExpandMacros(_directory);
+      public override string Name
+      {
+         get { return "Clear directory " + ExpandMacros(_directory); }
+      }
 
-            m_oBuilder.Log("Clearing folder " + directoryName, true);
+      public override void Run()
+      {
+         string directoryName = ExpandMacros(_directory);
 
-            if (!Directory.Exists(directoryName))
-            {
-               m_oBuilder.Log("Directory does not exist.", true);
-               return;
-            }
+         _builder.Log("Clearing folder " + directoryName, true);
 
-            string [] subDirs = Directory.GetDirectories(directoryName);
-            foreach (string subDir in subDirs)
-            {
-               m_oBuilder.Log("Deleting directory " + subDir + "...", true);
-                Directory.Delete(subDir, true);
-            }
+         if (!Directory.Exists(directoryName))
+         {
+            _builder.Log("Directory does not exist.", true);
+            return;
+         }
 
-            string[] files = Directory.GetFiles(directoryName);
+         string[] subDirs = Directory.GetDirectories(directoryName);
+         foreach (string subDir in subDirs)
+         {
+            _builder.Log("Deleting directory " + subDir + "...", true);
+            Directory.Delete(subDir, true);
+         }
 
-            foreach (string file in files)
-            {
-               m_oBuilder.Log("Deleting file " + file + "...", true);
-                File.Delete(file);
-            }
-        }
+         string[] files = Directory.GetFiles(directoryName);
 
-        public override string Name
-        {
-            get 
-            {
-                return "Clear directory " + ExpandMacros(_directory); 
-            }
-        }
-    }
+         foreach (string file in files)
+         {
+            _builder.Log("Deleting file " + file + "...", true);
+            File.Delete(file);
+         }
+      }
+   }
 }

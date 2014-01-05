@@ -76,7 +76,7 @@ namespace hMailServer_builder
            this.tabsControl.Location = new System.Drawing.Point(2, 2);
            this.tabsControl.Name = "tabsControl";
            this.tabsControl.SelectedIndex = 0;
-           this.tabsControl.Size = new System.Drawing.Size(763, 616);
+           this.tabsControl.Size = new System.Drawing.Size(743, 616);
            this.tabsControl.TabIndex = 0;
            // 
            // tabBuild
@@ -95,7 +95,7 @@ namespace hMailServer_builder
            this.tabBuild.Location = new System.Drawing.Point(4, 22);
            this.tabBuild.Name = "tabBuild";
            this.tabBuild.Padding = new System.Windows.Forms.Padding(3);
-           this.tabBuild.Size = new System.Drawing.Size(755, 590);
+           this.tabBuild.Size = new System.Drawing.Size(735, 590);
            this.tabBuild.TabIndex = 0;
            this.tabBuild.Text = "Build";
            this.tabBuild.UseVisualStyleBackColor = true;
@@ -169,7 +169,7 @@ namespace hMailServer_builder
            this.txtLog.Name = "txtLog";
            this.txtLog.ReadOnly = true;
            this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-           this.txtLog.Size = new System.Drawing.Size(742, 217);
+           this.txtLog.Size = new System.Drawing.Size(722, 217);
            this.txtLog.TabIndex = 6;
            // 
            // cmdStart
@@ -194,7 +194,7 @@ namespace hMailServer_builder
            this.lvwBuildSteps.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
            this.lvwBuildSteps.Location = new System.Drawing.Point(17, 73);
            this.lvwBuildSteps.Name = "lvwBuildSteps";
-           this.lvwBuildSteps.Size = new System.Drawing.Size(744, 218);
+           this.lvwBuildSteps.Size = new System.Drawing.Size(724, 218);
            this.lvwBuildSteps.TabIndex = 4;
            this.lvwBuildSteps.UseCompatibleStateImageBehavior = false;
            this.lvwBuildSteps.View = System.Windows.Forms.View.Details;

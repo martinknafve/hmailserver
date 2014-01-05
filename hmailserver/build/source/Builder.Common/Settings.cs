@@ -2,109 +2,32 @@
 // http://www.hmailserver.com
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
 using System.Configuration;
+using System.IO;
 
 namespace Builder.Common
 {
    public class Settings
    {
-      private string _VSPath;
-      private string _innoSetupPath;
-      private string _sourcePath;
-      private string _gitPath;
       private string _buildInstructions;
-      private int _buildNumber;
-      private string _version;
 
-      public string VSPath
-      {
-         get
-         {
-            return _VSPath;
-         }
-         set
-         {
-            _VSPath = value;
-         }
-      }
+      public string VSPath { get; set; }
 
-      public string InnoSetupPath
-      {
-         get
-         {
-            return _innoSetupPath;
-         }
-         set
-         {
-            _innoSetupPath = value;
-         }
-      }
+      public string InnoSetupPath { get; set; }
 
-      public string SourcePath
-      {
-         get
-         {
-            return _sourcePath;
-         }
-         set
-         {
-            _sourcePath = value;
-         }
-      }
+      public string SourcePath { get; set; }
 
-      public string GitPath
-      {
-         get
-         {
-            return _gitPath;
-         }
-         set
-         {
-            _gitPath = value;
-         }
-      }
+      public string GitPath { get; set; }
 
       public string BuildInstructions
       {
-         get
-         {
-            return _buildInstructions;
-         }
-         set
-         {
-            _buildInstructions = value;
-         }
+         get { return _buildInstructions; }
+         set { _buildInstructions = value; }
       }
 
-      public int BuildNumber
-      {
-         get
-         {
-            return _buildNumber;
-         }
-         set
-         {
-            _buildNumber = value;
-         }
+      public int BuildNumber { get; set; }
 
-      }
-
-      public string Version
-      {
-         get
-         {
-            return _version;
-         }
-         set
-         {
-            _version = value;
-         }
-
-      }
+      public string Version { get; set; }
 
       public void LoadSettings()
       {
@@ -116,7 +39,7 @@ namespace Builder.Common
          InnoSetupPath = c.AppSettings.Settings["InnoSetupPath"].Value;
          Version = c.AppSettings.Settings["Version"].Value;
          GitPath = c.AppSettings.Settings["GitPath"].Value;
-         
+
          _buildInstructions = c.GetSection("build").SectionInformation.GetRawXml();
       }
 

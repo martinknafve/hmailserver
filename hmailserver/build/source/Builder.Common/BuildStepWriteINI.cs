@@ -1,46 +1,39 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Runtime.InteropServices;
 
 namespace Builder.Common
 {
-    class BuildStepWriteINI : BuildStep
-    {
-        [DllImport("kernel32")]
-        private static extern long WritePrivateProfileString(string section,
-            string key,string val,string filePath);
+   internal class BuildStepWriteINI : BuildStep
+   {
+      private readonly string _fileName;
+      private readonly string _key;
+      private readonly string _section;
+      private readonly string _value;
 
-        private string m_sFilename;
-        private string m_sSection;
-        private string m_sKey;
-        private string m_sValue;
+      public BuildStepWriteINI(Builder builder, string fileName, string section, string key, string value)
+      {
+         _builder = builder;
 
-        public BuildStepWriteINI(Builder oBuilder, string sFileName, string sSection, string sKey, string sValue)
-        {
-            m_oBuilder = oBuilder;
-
-            m_sFilename = sFileName;
-            m_sSection = sSection;
-            m_sKey = sKey;
-            m_sValue = sValue;
-        }
+         _fileName = fileName;
+         _section = section;
+         _key = key;
+         _value = value;
+      }
 
 
-        public override string Name
-        {
-            get
-            {
-                return "Write to inifile " + m_sFilename;
-            }
-        }
+      public override string Name
+      {
+         get { return "Write to inifile " + _fileName; }
+      }
 
-        public override void Run()
-        {
-            m_oBuilder.Log("Writing to inifile " + m_sFilename + "...\r\n", true);
+      [DllImport("kernel32")]
+      private static extern long WritePrivateProfileString(string section,
+         string key, string val, string filePath);
 
-            WritePrivateProfileString(m_sSection, m_sKey, ExpandMacros(m_sValue), ExpandMacros(m_sFilename));
-        }
-    }
+      public override void Run()
+      {
+         _builder.Log("Writing to inifile " + _fileName + "...\r\n", true);
+
+         WritePrivateProfileString(_section, _key, ExpandMacros(_value), ExpandMacros(_fileName));
+      }
+   }
 }
-    

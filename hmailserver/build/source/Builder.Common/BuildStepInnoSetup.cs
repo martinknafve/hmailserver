@@ -2,59 +2,56 @@
 // http://www.hmailserver.com
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
 
 namespace Builder.Common
 {
-    class BuildStepInnoSetup : BuildStep
-    {
-        private string m_sProject;
+   internal class BuildStepInnoSetup : BuildStep
+   {
+      private readonly string _project;
 
-        public BuildStepInnoSetup(Builder oBuilder, string sProject)
-        {
-            m_oBuilder = oBuilder;
-            m_sProject = sProject;
-        }
+      public BuildStepInnoSetup(Builder builder, string project)
+      {
+         _builder = builder;
+         _project = project;
+      }
 
 
-        public override string Name
-        {
-            get
+      public override string Name
+      {
+         get { return "Create installation " + _project; }
+      }
+
+      public override void Run()
+      {
+         _builder.Log("Running InnoSetup on " + ExpandMacros(_project) + "...\r\n", true);
+
+         string sArguments = "\"" + ExpandMacros(_project) + "\"";
+
+         var processCompile = new Process
+         {
+            StartInfo =
             {
-                return "Create installation " + m_sProject;
+               UseShellExecute = false,
+               RedirectStandardOutput = true,
+               CreateNoWindow = true,
+               FileName = ExpandMacros(_builder.ParameterInnoSetupPath),
+               Arguments = sArguments
             }
-        }
+         };
 
-        public override void Run()
-        {
-           m_oBuilder.Log("Running InnoSetup on " + ExpandMacros(m_sProject) + "...\r\n", true);
+         processCompile.Start();
 
-            string sArguments = "\"" + ExpandMacros(m_sProject) + "\"";
+         // Capture the result
+         string output = processCompile.StandardOutput.ReadToEnd();
 
-            Process processCompile = new Process();
-
-            processCompile.StartInfo.UseShellExecute = false;
-            processCompile.StartInfo.RedirectStandardOutput = true;
-            processCompile.StartInfo.CreateNoWindow = true;
-
-            processCompile.StartInfo.FileName = ExpandMacros(m_oBuilder.ParameterInnoSetupPath);
-            processCompile.StartInfo.Arguments = sArguments;
-
-            processCompile.Start();
-
-            // Capture the result
-            string output = processCompile.StandardOutput.ReadToEnd();
-
-            processCompile.WaitForExit();
+         processCompile.WaitForExit();
 
 
-            m_oBuilder.Log(output + "\r\n", true);
+         _builder.Log(output + "\r\n", true);
 
-            if (output.IndexOf("0 succeeded") >= 0)
-                throw new Exception("Innosetup compilation failed");
-        }
-
-    }
+         if (output.IndexOf("0 succeeded", StringComparison.Ordinal) >= 0)
+            throw new Exception("Innosetup compilation failed");
+      }
+   }
 }

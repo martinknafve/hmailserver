@@ -2,82 +2,79 @@
 // http://www.hmailserver.com
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
 
 namespace Builder.Common
 {
-    class BuildStepGit : BuildStep
-    {
-        private string m_sDirectory;
-        private GITAction m_eAction;
+   internal class BuildStepGit : BuildStep
+   {
+      public enum GITAction
+      {
+         RevertLocalChanges = 1,
+         Pull = 2
+      }
 
-        public enum GITAction
-        {
-            RevertLocalChanges = 1,
-            Pull = 2
-        }
-
-
-        public BuildStepGit(Builder oBuilder, GITAction a, string sDirectory)
-        {
-            m_oBuilder = oBuilder;
-
-            m_eAction = a;
-            m_sDirectory = sDirectory;
-        }
+      private readonly GITAction _action;
+      private readonly string _directory;
 
 
-        public override string Name
-        {
-            get
+      public BuildStepGit(Builder oBuilder, GITAction action, string sDirectory)
+      {
+         _builder = oBuilder;
+
+         _action = action;
+         _directory = sDirectory;
+      }
+
+
+      public override string Name
+      {
+         get
+         {
+            switch (_action)
             {
-                switch (m_eAction)
-                {
-                    case GITAction.RevertLocalChanges:
-                        return "Git Reset " + m_sDirectory;
-                    case GITAction.Pull:
-                        return "Git Pull " + m_sDirectory;
-                }
-
-                return "<Unknown>";
-            }
-        }
-
-        public override void Run()
-        {
-            string sDirectory = ExpandMacros(m_sDirectory);
-
-            string sCommand = "";
-            switch (m_eAction)
-            {
-                case GITAction.RevertLocalChanges:
-                  m_oBuilder.Log("Resetting " + sDirectory + "...\r\n", true);
-                    sCommand = "checkout .";
-                    break;
-                case GITAction.Pull:
-                    m_oBuilder.Log("Pulling " + sDirectory + "...\r\n", true);
-                    sCommand = "pull";
-                    break;
-                default:
-                    throw new Exception("Failed. Unknown action.");
+               case GITAction.RevertLocalChanges:
+                  return "Git Reset " + _directory;
+               case GITAction.Pull:
+                  return "Git Pull " + _directory;
             }
 
-            ProcessLauncher launcher = new ProcessLauncher();
-            launcher.Output += new ProcessLauncher.OutputDelegate(launcher_Output);
-            string output;
+            return "<Unknown>";
+         }
+      }
 
-            int exitCode = launcher.LaunchProcess(ExpandMacros(m_oBuilder.ParameterGitPath), ExpandMacros(sCommand),sDirectory, out output);
+      public override void Run()
+      {
+         string directory = ExpandMacros(_directory);
 
-            if (exitCode != 0)
-                throw new Exception(string.Format("{0} failed. Exit code: {1}. Output: {2}", sCommand, exitCode, output));
-        }
+         string command = "";
+         switch (_action)
+         {
+            case GITAction.RevertLocalChanges:
+               _builder.Log("Reverting local changes in " + directory + "...\r\n", true);
+               command = "checkout .";
+               break;
+            case GITAction.Pull:
+               _builder.Log("Pulling " + directory + "...\r\n", true);
+               command = "pull";
+               break;
+            default:
+               throw new Exception("Failed. Unknown action.");
+         }
 
-        void launcher_Output(string output)
-        {
-           m_oBuilder.Log(output, true);
-        }
+         var launcher = new ProcessLauncher();
+         launcher.Output += launcher_Output;
+         string output;
 
-    }
+         int exitCode = launcher.LaunchProcess(ExpandMacros(_builder.ParameterGitPath), ExpandMacros(command), directory,
+            out output);
+
+         if (exitCode != 0)
+            throw new Exception(string.Format("{0} failed. Exit code: {1}. Output: {2}", command, exitCode, output));
+      }
+
+      private void launcher_Output(string output)
+      {
+         _builder.Log(output, true);
+      }
+   }
 }

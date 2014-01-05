@@ -1,20 +1,16 @@
 // Copyright (c) 2010 Martin Knafve / hMailServer.com.  
 // http://www.hmailserver.com
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
-using System.IO;
 
 namespace Builder.Common
 {
-   class ProcessLauncher
+   internal class ProcessLauncher
    {
       public delegate void OutputDelegate(string output);
-      public event OutputDelegate Output;
 
       public string _receivedData;
+      public event OutputDelegate Output;
 
       public int LaunchProcess(string path, string arguments, string workingDirectory, out string writtenData)
       {
@@ -22,7 +18,7 @@ namespace Builder.Common
 
          var proc = new Process();
          proc.StartInfo.FileName = path;
-         proc.StartInfo.WorkingDirectory =workingDirectory;
+         proc.StartInfo.WorkingDirectory = workingDirectory;
          proc.StartInfo.Arguments = arguments;
          proc.StartInfo.UseShellExecute = false;
 
@@ -32,8 +28,8 @@ namespace Builder.Common
          proc.EnableRaisingEvents = true;
          proc.StartInfo.CreateNoWindow = true;
          // see below for output handler
-         proc.ErrorDataReceived += new DataReceivedEventHandler(proc_DataReceived);
-         proc.OutputDataReceived += new DataReceivedEventHandler(proc_DataReceived);
+         proc.ErrorDataReceived += proc_DataReceived;
+         proc.OutputDataReceived += proc_DataReceived;
 
          proc.Start();
 
@@ -47,7 +43,7 @@ namespace Builder.Common
          return proc.ExitCode;
       }
 
-      void proc_DataReceived(object sender, DataReceivedEventArgs e)
+      private void proc_DataReceived(object sender, DataReceivedEventArgs e)
       {
          if (e.Data == null)
             return;
@@ -57,7 +53,5 @@ namespace Builder.Common
 
          _receivedData += e.Data;
       }
-
-
    }
 }

@@ -1,41 +1,34 @@
 // Copyright (c) 2010 Martin Knafve / hMailServer.com.  
 // http://www.hmailserver.com
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
 namespace Builder.Common
 {
-
-   class BuildStepCopyFile : BuildStep
+   internal class BuildStepCopyFile : BuildStep
    {
-      private string m_sFrom;
-      private string m_sTo;
-      private bool m_bOverwrite;
+      private readonly string _from;
+      private readonly bool _overwrite;
+      private readonly string _to;
 
-      public BuildStepCopyFile(Builder oBuilder, string sFrom, string sTo, bool bOverwrite)
+      public BuildStepCopyFile(Builder builder, string from, string to, bool overwrite)
       {
-         m_oBuilder = oBuilder;
+         _builder = builder;
 
-         m_sFrom = sFrom;
-         m_sTo = sTo;
-         m_bOverwrite = bOverwrite;
+         _from = from;
+         _to = to;
+         _overwrite = overwrite;
       }
 
       public override string Name
       {
-         get
-         {
-            return "Copy file " + m_sFrom;
-         }
+         get { return "Copy file " + _from; }
       }
 
       public override void Run()
       {
-         m_oBuilder.Log("Copying file " + ExpandMacros(m_sFrom) + "...\r\n", true);
-         File.Copy(ExpandMacros(m_sFrom), ExpandMacros(m_sTo), m_bOverwrite);
+         _builder.Log("Copying file " + ExpandMacros(_from) + "...\r\n", true);
+         File.Copy(ExpandMacros(_from), ExpandMacros(_to), _overwrite);
       }
    }
 }

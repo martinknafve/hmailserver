@@ -2,17 +2,14 @@
 // http://www.hmailserver.com
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Builder.Common;
 using System.Threading;
+using Builder.Common;
 
 namespace Builder.Console
 {
-   class Program
+   internal class Program
    {
-      static void Main(string[] args)
+      private static void Main(string[] args)
       {
          if (args.Length != 3)
          {
@@ -21,12 +18,12 @@ namespace Builder.Console
             return;
          }
 
-         Settings settings = new Settings();
+         var settings = new Settings();
          settings.LoadSettings();
 
-         BuildLoader loader = new BuildLoader();
-         Builder.Common.Builder builder = loader.Load(settings.BuildInstructions);
-         
+         var loader = new BuildLoader();
+         Common.Builder builder = loader.Load(settings.BuildInstructions);
+
 
          // Run all steps.
          builder.StepStart = -1;
@@ -45,26 +42,24 @@ namespace Builder.Console
          builder.LoadSettings(settings);
 
 
-         ManualResetEvent eventStopThread= new ManualResetEvent(false);
-         ManualResetEvent eventThreadStopped= new ManualResetEvent(false);
+         var eventStopThread = new ManualResetEvent(false);
+         var eventThreadStopped = new ManualResetEvent(false);
 
-         BuildRunner runner = new BuildRunner(eventStopThread, eventThreadStopped, builder);
-         runner.StepError+= runner_StepError;
+         var runner = new BuildRunner(eventStopThread, eventThreadStopped, builder);
+         runner.StepError += runner_StepError;
          builder.MessageLog += builder_MessageLog;
          runner.Run();
-
-         return;
       }
 
-      static void builder_MessageLog(bool timestamp, string message)
+      private static void builder_MessageLog(bool timestamp, string message)
       {
          if (timestamp)
             System.Console.Write(DateTime.Now + " - ");
-         
+
          System.Console.WriteLine(message);
       }
 
-      static void runner_StepError(int stepindex, string errorMessage)
+      private static void runner_StepError(int stepindex, string errorMessage)
       {
          System.Console.WriteLine(errorMessage);
          Environment.ExitCode = -1;

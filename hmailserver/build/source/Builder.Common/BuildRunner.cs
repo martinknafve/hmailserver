@@ -2,87 +2,85 @@
 // http://www.hmailserver.com
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 namespace Builder.Common
 {
-    public class BuildRunner
-    {
-        ManualResetEvent m_EventStop;
-        ManualResetEvent m_EventStopped;
+   public class BuildRunner
+   {
+      public delegate void StepCompletedDelegate(int stepIndex);
 
-        Builder m_oBuilder;
+      public delegate void StepErrorDelegate(int stepindex, string errorMessage);
 
-        public delegate void StepStartedDelegate(int stepIndex);
-        public event StepStartedDelegate StepStarted;
+      public delegate void StepStartedDelegate(int stepIndex);
 
-        public delegate void StepErrorDelegate(int stepindex, string errorMessage);
-        public event StepErrorDelegate StepError;
+      public delegate void ThreadFinishedDelegate();
 
-        public delegate void StepCompletedDelegate(int stepIndex);
-        public event StepCompletedDelegate StepCompleted;
+      private readonly Builder _builder;
 
-        public delegate void ThreadFinishedDelegate();
-        public event ThreadFinishedDelegate ThreadFinished;
+      private readonly ManualResetEvent _eventStop;
+      private readonly ManualResetEvent _eventStopped;
 
-        public BuildRunner(
-            ManualResetEvent eventStop, 
-			   ManualResetEvent eventStopped,
-            Builder oBuilder)
-        {
-            m_EventStop = eventStop;
-            m_EventStopped = eventStopped;
+      public BuildRunner(
+         ManualResetEvent eventStop,
+         ManualResetEvent eventStopped,
+         Builder builder)
+      {
+         _eventStop = eventStop;
+         _eventStopped = eventStopped;
 
-            m_oBuilder = oBuilder;
+         _builder = builder;
+      }
 
-        }
+      public event StepStartedDelegate StepStarted;
 
-        
+      public event StepErrorDelegate StepError;
 
-        public void Run()
-        {
+      public event StepCompletedDelegate StepCompleted;
 
-            for (int i = 0; i < m_oBuilder.Count; i++)
+      public event ThreadFinishedDelegate ThreadFinished;
+
+
+      public void Run()
+      {
+         for (int i = 0; i < _builder.Count; i++)
+         {
+            if (_builder.RunAllSteps ||
+                (i >= _builder.StepStart && i <= _builder.StepEnd))
             {
-                if (m_oBuilder.RunAllSteps ||
-                    (i >= m_oBuilder.StepStart && i <= m_oBuilder.StepEnd)) 
-                {
-                    BuildStep oStep = m_oBuilder.Get(i);
+               BuildStep oStep = _builder.Get(i);
 
-                    if (StepStarted != null)
-                       StepStarted(i);
+               if (StepStarted != null)
+                  StepStarted(i);
 
-                    try
-                    {
-                        oStep.Run();
-                    }
-                    catch (Exception e)
-                    {
-                       if (StepError != null)
-                          StepError(i, e.Message);
-                        
-                        break;
-                    }
+               try
+               {
+                  oStep.Run();
+               }
+               catch (Exception e)
+               {
+                  if (StepError != null)
+                     StepError(i, e.Message);
 
-                    if (StepCompleted != null)
-                       StepCompleted(i);
-                }
+                  break;
+               }
 
-                if (m_EventStop.WaitOne(1))
-                    break;
+               if (StepCompleted != null)
+                  StepCompleted(i);
             }
 
-            // Make synchronous call to main form
-            // to inform it that thread finished
-            if (ThreadFinished != null)
-               ThreadFinished();
+            if (_eventStop.WaitOne(1))
+               break;
+         }
+
+         // Make synchronous call to main form
+         // to inform it that thread finished
+         if (ThreadFinished != null)
+            ThreadFinished();
 
 
-            // Reset the event
-            m_EventStopped.Set();
-
-        }
-    }
+         // Reset the event
+         _eventStopped.Set();
+      }
+   }
 }

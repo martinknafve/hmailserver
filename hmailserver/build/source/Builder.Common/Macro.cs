@@ -1,32 +1,27 @@
 // Copyright (c) 2010 Martin Knafve / hMailServer.com.  
 // http://www.hmailserver.com
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Builder.Common
 {
-    class Macro
-    {
-        private string m_sName;
-        private string m_sValue;
+   internal class Macro
+   {
+      private readonly string _name;
+      private readonly string _value;
 
-        public Macro(string sName, string sValue)
-        {
-            m_sName = sName;
-            m_sValue = sValue;
-        }
+      public Macro(string name, string value)
+      {
+         _name = name;
+         _value = value;
+      }
 
-        public string Name
-        {
-            get { return m_sName; }
-        }
-        
-        public string Value
-        {
-            get { return m_sValue;  }
-        }
+      public string Name
+      {
+         get { return _name; }
+      }
 
-    }
+      public string Value
+      {
+         get { return _value; }
+      }
+   }
 }
