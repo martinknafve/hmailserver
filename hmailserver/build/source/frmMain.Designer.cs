@@ -49,8 +49,8 @@ namespace hMailServer_builder
            this.txtBuildNumber = new System.Windows.Forms.TextBox();
            this.lblBuildNumber = new System.Windows.Forms.Label();
            this.tabEnvironment = new System.Windows.Forms.TabPage();
-           this.txtPathSubversion = new System.Windows.Forms.TextBox();
-           this.lblSVNExecutable = new System.Windows.Forms.Label();
+           this.txtPathGit = new System.Windows.Forms.TextBox();
+           this.lblGitExecutable = new System.Windows.Forms.Label();
            this.txtPathInnoSetup = new System.Windows.Forms.TextBox();
            this.lblInnoSetupCompiler = new System.Windows.Forms.Label();
            this.txtPathVS8 = new System.Windows.Forms.TextBox();
@@ -95,7 +95,7 @@ namespace hMailServer_builder
            this.tabBuild.Location = new System.Drawing.Point(4, 22);
            this.tabBuild.Name = "tabBuild";
            this.tabBuild.Padding = new System.Windows.Forms.Padding(3);
-           this.tabBuild.Size = new System.Drawing.Size(778, 590);
+           this.tabBuild.Size = new System.Drawing.Size(755, 590);
            this.tabBuild.TabIndex = 0;
            this.tabBuild.Text = "Build";
            this.tabBuild.UseVisualStyleBackColor = true;
@@ -217,19 +217,19 @@ namespace hMailServer_builder
             this.cmBuildSelected,
             this.cmBuildFromCursor});
            this.contextMenu.Name = "contextMenu";
-           this.contextMenu.Size = new System.Drawing.Size(155, 48);
+           this.contextMenu.Size = new System.Drawing.Size(167, 48);
            // 
            // cmBuildSelected
            // 
            this.cmBuildSelected.Name = "cmBuildSelected";
-           this.cmBuildSelected.Size = new System.Drawing.Size(154, 22);
+           this.cmBuildSelected.Size = new System.Drawing.Size(166, 22);
            this.cmBuildSelected.Text = "Build selected";
            this.cmBuildSelected.Click += new System.EventHandler(this.cmBuildSelected_Click);
            // 
            // cmBuildFromCursor
            // 
            this.cmBuildFromCursor.Name = "cmBuildFromCursor";
-           this.cmBuildFromCursor.Size = new System.Drawing.Size(154, 22);
+           this.cmBuildFromCursor.Size = new System.Drawing.Size(166, 22);
            this.cmBuildFromCursor.Text = "Build from cursor";
            this.cmBuildFromCursor.Click += new System.EventHandler(this.cmBuildFromCursor_Click);
            // 
@@ -253,8 +253,8 @@ namespace hMailServer_builder
            // 
            // tabEnvironment
            // 
-           this.tabEnvironment.Controls.Add(this.txtPathSubversion);
-           this.tabEnvironment.Controls.Add(this.lblSVNExecutable);
+           this.tabEnvironment.Controls.Add(this.txtPathGit);
+           this.tabEnvironment.Controls.Add(this.lblGitExecutable);
            this.tabEnvironment.Controls.Add(this.txtPathInnoSetup);
            this.tabEnvironment.Controls.Add(this.lblInnoSetupCompiler);
            this.tabEnvironment.Controls.Add(this.txtPathVS8);
@@ -269,21 +269,21 @@ namespace hMailServer_builder
            this.tabEnvironment.Text = "Environment";
            this.tabEnvironment.UseVisualStyleBackColor = true;
            // 
-           // txtPathSubversion
+           // txtPathGit
            // 
-           this.txtPathSubversion.Location = new System.Drawing.Point(17, 174);
-           this.txtPathSubversion.Name = "txtPathSubversion";
-           this.txtPathSubversion.Size = new System.Drawing.Size(292, 21);
-           this.txtPathSubversion.TabIndex = 9;
+           this.txtPathGit.Location = new System.Drawing.Point(17, 174);
+           this.txtPathGit.Name = "txtPathGit";
+           this.txtPathGit.Size = new System.Drawing.Size(292, 21);
+           this.txtPathGit.TabIndex = 9;
            // 
-           // lblSVNExecutable
+           // lblGitExecutable
            // 
-           this.lblSVNExecutable.AutoSize = true;
-           this.lblSVNExecutable.Location = new System.Drawing.Point(14, 158);
-           this.lblSVNExecutable.Name = "lblSVNExecutable";
-           this.lblSVNExecutable.Size = new System.Drawing.Size(116, 13);
-           this.lblSVNExecutable.TabIndex = 8;
-           this.lblSVNExecutable.Text = "Subversion executable";
+           this.lblGitExecutable.AutoSize = true;
+           this.lblGitExecutable.Location = new System.Drawing.Point(14, 158);
+           this.lblGitExecutable.Name = "lblGitExecutable";
+           this.lblGitExecutable.Size = new System.Drawing.Size(76, 13);
+           this.lblGitExecutable.TabIndex = 8;
+           this.lblGitExecutable.Text = "Git executable";
            // 
            // txtPathInnoSetup
            // 
@@ -399,8 +399,8 @@ namespace hMailServer_builder
         private System.Windows.Forms.Label lblBuildTimeLabel;
         private System.Windows.Forms.TextBox txtVersion;
         private System.Windows.Forms.Label lblVersion;
-        private System.Windows.Forms.TextBox txtPathSubversion;
-        private System.Windows.Forms.Label lblSVNExecutable;
+        private System.Windows.Forms.TextBox txtPathGit;
+        private System.Windows.Forms.Label lblGitExecutable;
     }
 }
 

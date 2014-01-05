@@ -16,7 +16,7 @@ namespace Builder.Common
       private string m_sParamSourcePath;
       private string m_sParamVS8Path;
       private string m_sParamInnoSetupPath;
-      private string m_sParamSubversionPath;
+      private string m_sParamGitPath;
 
       private int m_iStepStart;
       private int m_iStepEnd;
@@ -74,8 +74,8 @@ namespace Builder.Common
 
       public string ParameterGitPath
       {
-         get { return m_sParamSubversionPath; }
-         set { m_sParamSubversionPath = value; }
+         get { return m_sParamGitPath; }
+         set { m_sParamGitPath = value; }
       }
 
 

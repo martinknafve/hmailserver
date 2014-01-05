@@ -61,7 +61,7 @@ namespace hMailServer_builder
          settings.Version  = txtVersion.Text;
          settings.VSPath = txtPathVS8.Text;
          settings.InnoSetupPath = txtPathInnoSetup.Text;
-         settings.GitPath = txtPathSubversion.Text;
+         settings.GitPath = txtPathGit.Text;
 
          settings.SaveSettings();
       }
@@ -76,7 +76,7 @@ namespace hMailServer_builder
          txtBuildNumber.Text = settings.BuildNumber.ToString();
          txtPathInnoSetup.Text = settings.InnoSetupPath;
          txtVersion.Text = settings.Version;
-         txtPathSubversion.Text = settings.GitPath;
+         txtPathGit.Text = settings.GitPath;
 
          string s = settings.BuildInstructions;
 
@@ -169,7 +169,7 @@ namespace hMailServer_builder
          m_oBuilder.ParameterSourcePath = txtPathSource.Text;
          m_oBuilder.ParameterVS8Path = txtPathVS8.Text;
          m_oBuilder.ParameterInnoSetupPath = txtPathInnoSetup.Text;
-         m_oBuilder.ParameterGitPath = txtPathSubversion.Text;
+         m_oBuilder.ParameterGitPath = txtPathGit.Text;
 
          // Create macros
          m_oBuilder.LoadMacros(txtPathSource.Text, txtVersion.Text, txtBuildNumber.Text);
