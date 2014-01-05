@@ -16,13 +16,13 @@ namespace Builder.Common
 
       public string _receivedData;
 
-      public int LaunchProcess(string path, string arguments, out string writtenData)
+      public int LaunchProcess(string path, string arguments, string workingDirectory, out string writtenData)
       {
          _receivedData = "";
 
          var proc = new Process();
          proc.StartInfo.FileName = path;
-         proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(path);
+         proc.StartInfo.WorkingDirectory =workingDirectory;
          proc.StartInfo.Arguments = arguments;
          proc.StartInfo.UseShellExecute = false;
 

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace Builder.Common
 {
@@ -38,9 +39,10 @@ namespace Builder.Common
             ProcessLauncher launcher = new ProcessLauncher();
             launcher.Output += launcher_Output;
 
+            string workingDirectory = Path.GetDirectoryName(ExpandMacros(m_sExecutable));
 
             string output;
-            int exitCode = launcher.LaunchProcess(ExpandMacros(m_sExecutable), ExpandMacros(m_sArguments), out output);
+            int exitCode = launcher.LaunchProcess(ExpandMacros(m_sExecutable), ExpandMacros(m_sArguments),workingDirectory, out output);
 
             if (exitCode != 0)
                throw new Exception(string.Format("Running of application failed. Exit code: {0}", exitCode));

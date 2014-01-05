@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using System.IO;
 
 namespace Builder.Common
 {
@@ -45,7 +46,9 @@ namespace Builder.Common
             launcher.Output +=new ProcessLauncher.OutputDelegate(launcher_Output);
             
             string output;
-            int exitCode = launcher.LaunchProcess(m_oBuilder.ExpandMacros(m_oBuilder.ParameterVS8Path), arguments, out output);
+            string workingDirectory = Path.GetDirectoryName(m_oBuilder.ExpandMacros(m_oBuilder.ParameterVS8Path));
+
+            int exitCode = launcher.LaunchProcess(m_oBuilder.ExpandMacros(m_oBuilder.ParameterVS8Path), arguments, workingDirectory, out output);
             
             if (exitCode != 0)
                 throw new Exception(string.Format("Compilation failed. Exit code: {0}", exitCode));

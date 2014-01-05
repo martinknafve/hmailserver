@@ -8,19 +8,19 @@ using System.Diagnostics;
 
 namespace Builder.Common
 {
-    class BuildStepSubversion : BuildStep
+    class BuildStepGit : BuildStep
     {
         private string m_sDirectory;
-        private SVNAction m_eAction;
+        private GITAction m_eAction;
 
-        public enum SVNAction
+        public enum GITAction
         {
-            SVNRevert = 1,
-            SVNUpdate = 2
+            RevertLocalChanges = 1,
+            Pull = 2
         }
 
 
-        public BuildStepSubversion(Builder oBuilder, SVNAction a, string sDirectory)
+        public BuildStepGit(Builder oBuilder, GITAction a, string sDirectory)
         {
             m_oBuilder = oBuilder;
 
@@ -35,10 +35,10 @@ namespace Builder.Common
             {
                 switch (m_eAction)
                 {
-                    case SVNAction.SVNRevert:
-                        return "SVN - Revert " + m_sDirectory;
-                    case SVNAction.SVNUpdate:
-                        return "SVN - Update " + m_sDirectory;
+                    case GITAction.RevertLocalChanges:
+                        return "Git Reset " + m_sDirectory;
+                    case GITAction.Pull:
+                        return "Git Pull " + m_sDirectory;
                 }
 
                 return "<Unknown>";
@@ -52,13 +52,13 @@ namespace Builder.Common
             string sCommand = "";
             switch (m_eAction)
             {
-                case SVNAction.SVNRevert:
-                  m_oBuilder.Log("Reverting " + sDirectory + "...\r\n", true);
-                    sCommand = "revert -R " + sDirectory;
+                case GITAction.RevertLocalChanges:
+                  m_oBuilder.Log("Resetting " + sDirectory + "...\r\n", true);
+                    sCommand = "checkout .";
                     break;
-                case SVNAction.SVNUpdate:
-                    m_oBuilder.Log("Updating " + sDirectory + "...\r\n", true);
-                    sCommand = "update "+ sDirectory;
+                case GITAction.Pull:
+                    m_oBuilder.Log("Pulling " + sDirectory + "...\r\n", true);
+                    sCommand = "pull";
                     break;
                 default:
                     throw new Exception("Failed. Unknown action.");
@@ -67,10 +67,11 @@ namespace Builder.Common
             ProcessLauncher launcher = new ProcessLauncher();
             launcher.Output += new ProcessLauncher.OutputDelegate(launcher_Output);
             string output;
-            launcher.LaunchProcess(ExpandMacros(m_oBuilder.ParameterSubversionPath), ExpandMacros(sCommand), out output);
 
-            if (output.IndexOf("svn help cleanup") > 0)
-                throw new Exception("SVN command failed.");
+            int exitCode = launcher.LaunchProcess(ExpandMacros(m_oBuilder.ParameterGitPath), ExpandMacros(sCommand),sDirectory, out output);
+
+            if (exitCode != 0)
+                throw new Exception(string.Format("{0} failed. Exit code: {1}. Output: {2}", sCommand, exitCode, output));
         }
 
         void launcher_Output(string output)

@@ -39,8 +39,8 @@ namespace Builder.Common
                     AddActionCopyFile(oBuilder, oAction);
                 else if (sType == "compileinnosetup")
                     AddActionCompileInnoSetup(oBuilder, oAction);
-                else if (sType == "subversion")
-                    AddActionSubversion(oBuilder, oAction);
+                else if (sType == "git")
+                    AddActionGit(oBuilder, oAction);
                 else if (sType == "cleardirectory")
                     AddActionClearDirectory(oBuilder, oAction);
                 else
@@ -126,21 +126,21 @@ namespace Builder.Common
             oBuilder.Add(new BuildStepInnoSetup(oBuilder, sFilename));
         }
 
-        private void AddActionSubversion(Builder oBuilder, XmlNode oNode)
+        private void AddActionGit(Builder oBuilder, XmlNode oNode)
         {
             string sAction = oNode.Attributes["action"].Value;
             string sDirectory = oNode.Attributes["directory"].Value;
 
-            BuildStepSubversion.SVNAction svnaction;
+            BuildStepGit.GITAction gitaction;
 
-            if (sAction == "revert")
-                svnaction = BuildStepSubversion.SVNAction.SVNRevert;
-            else if (sAction == "update")
-                svnaction = BuildStepSubversion.SVNAction.SVNUpdate;
+            if (sAction == "revertlocalchanges")
+                gitaction = BuildStepGit.GITAction.RevertLocalChanges;
+            else if (sAction == "pull")
+                gitaction = BuildStepGit.GITAction.Pull;
             else
-                throw new Exception("Incorrect SubVersion configuration");
+                throw new Exception("Incorrect Git configuration");
 
-            oBuilder.Add(new BuildStepSubversion(oBuilder,svnaction, sDirectory));
+            oBuilder.Add(new BuildStepGit(oBuilder,gitaction, sDirectory));
         }
 
         public static string ProgramFilesx86()

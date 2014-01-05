@@ -72,7 +72,7 @@ namespace Builder.Common
          set { m_sParamInnoSetupPath = value; }
       }
 
-      public string ParameterSubversionPath
+      public string ParameterGitPath
       {
          get { return m_sParamSubversionPath; }
          set { m_sParamSubversionPath = value; }
@@ -85,7 +85,7 @@ namespace Builder.Common
          ParameterSourcePath = settings.SourcePath;
          ParameterVS8Path = settings.VSPath;
          ParameterInnoSetupPath = settings.InnoSetupPath;
-         ParameterSubversionPath = settings.SubversionPath;
+         ParameterGitPath = settings.GitPath;
       }
 
       public void Log(string sMessage, bool timestamp)
