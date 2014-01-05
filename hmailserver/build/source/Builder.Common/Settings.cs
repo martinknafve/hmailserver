@@ -15,7 +15,7 @@ namespace Builder.Common
       private string _VSPath;
       private string _innoSetupPath;
       private string _sourcePath;
-      private string _subversionPath;
+      private string _gitPath;
       private string _buildInstructions;
       private int _buildNumber;
       private string _version;
@@ -56,15 +56,15 @@ namespace Builder.Common
          }
       }
 
-      public string SubversionPath
+      public string GitPath
       {
          get
          {
-            return _subversionPath;
+            return _gitPath;
          }
          set
          {
-            _subversionPath = value;
+            _gitPath = value;
          }
       }
 
@@ -115,7 +115,7 @@ namespace Builder.Common
          BuildNumber = Convert.ToInt32(c.AppSettings.Settings["BuildNumber"].Value);
          InnoSetupPath = c.AppSettings.Settings["InnoSetupPath"].Value;
          Version = c.AppSettings.Settings["Version"].Value;
-         SubversionPath = c.AppSettings.Settings["SubversionPath"].Value;
+         GitPath = c.AppSettings.Settings["GitPath"].Value;
          
          _buildInstructions = c.GetSection("build").SectionInformation.GetRawXml();
       }
@@ -129,7 +129,7 @@ namespace Builder.Common
          c.AppSettings.Settings["Version"].Value = Version;
          c.AppSettings.Settings["VS8Path"].Value = VSPath;
          c.AppSettings.Settings["InnoSetupPath"].Value = InnoSetupPath;
-         c.AppSettings.Settings["SubversionPath"].Value = SubversionPath;
+         c.AppSettings.Settings["GitPath"].Value = GitPath;
 
          c.Save(ConfigurationSaveMode.Modified);
       }

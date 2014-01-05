@@ -27,6 +27,13 @@ namespace TranslationExtractor
          {
             Console.WriteLine(string.Format("Translation folder {0} does not exist.", TranslationFolder));
             Environment.Exit(-1);
+            return;
+         }
+
+         if (string.IsNullOrEmpty(username))
+         {
+             Environment.Exit(-1);
+             return;
          }
 
          Console.WriteLine(string.Format("Creating translation in {0}.", TranslationFolder));

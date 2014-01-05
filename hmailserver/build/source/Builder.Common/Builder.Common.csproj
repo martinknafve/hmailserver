@@ -55,9 +55,9 @@
     <Compile Include="BuildStepCopyFile.cs" />
     <Compile Include="BuildStepInnoSetup.cs" />
     <Compile Include="BuildStepRunApplication.cs" />
-    <Compile Include="BuildStepSubversion.cs" />
     <Compile Include="BuildStepWriteFile.cs" />
     <Compile Include="BuildStepWriteINI.cs" />
+    <Compile Include="BuildStepGit.cs" />
     <Compile Include="Macro.cs" />
     <Compile Include="ProcessLauncher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
